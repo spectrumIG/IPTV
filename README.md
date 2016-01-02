@@ -1,43 +1,50 @@
 # IPTV
-Partendo da una banale ricerca su Google del tipo "iptv"
-mi sono accorto che ci sono un sacco di servizi che 
-vendono pacchetti tv, e lo fanno illegalmente...
-Una ricerca più approfondita mi ha fatto notare che
-esiste una sorta di CMS per distribuire questo tipo di
-servizi... o.O 
-e niente, ho notato che ci sono siti che rilasciano url per 
-vedere partite etc etc, e guardando bene gli url,
-ho capito come raggirarli XD
 
-#### Questo script è a scopo di TEST, NON USATELO COCCODIO XD
+   This program is just a demonstration. DO NOT USE IT FOR PERSONAL purpose
 
-#### QUESTIONE ETICA
-Anche se questi servizi sono palesemente irregolari,
-la questione morale va sempre valutata.
+## What is this?
 
+IPTV is a simple python script that let you crawl the search engines
+in order to fetch those sites that stream illegal tv programs.
 
-### Version
-0.1
+This script leverage the fact the a lot of those sites use the same
+CMS to create the web application and sharing the service, behind a CMS there's
+always some exploits.
+We are using one simple exploit to grab and crawl the site's url and use for our
+purpose.
 
-### INSTALLAZIONE
-installare i moduli google e pyprind
-usate il metodo che volete... ma pip andrà benissimo
+## Ethical Dilemma
 
-pip install google
-pip install pyprind
-pip install psutil
+Even though those services are illegal, stealing from a thief is still stealing.
 
-### COME SI USA
-è uno script, recatevi da terminale nella root dello script
-in questo caso cd IPTV 
-e lanciate il tool scrivendo python iptv.py -h
+## External dependencies
 
-con questo comando, come anche omettendo il -h 
-vi dirà come si usa... ossia per cercare i server
-python iptv.py -pl (che sta per print list)
-per lanciare l'attacco forza bruta, python iptv.py http://linck.che.volete:00voi
+If you want to use the `iptv_gui` version you need to install `PyQt` first
 
-License
-----
-MIT
-**Free Software, Hell Yeah!**
+* On Linux you can simply search it from your preferred package manager, for example
+on Ubuntu/Debian `sudo apt-get install pyqt4-dev-tools`
+* On Mac OSX you can use *brew* to install it `brew install sip` && `brew install pyqt`
+* On Windows yu can download the official .exe from the PyQt site.
+
+## How to use the CLI version
+
+* Clone the repository `git clone https://github.com/Pinperepette/IPTV`
+* `cd` into `iptv`
+* run `pip install -r requirements.txt` in order to get the full dependencies
+* run `python iptv_cli.py`
+* Use the application menu to do stuff
+
+## How to use the GUI version
+
+* Clone the repository `git clone git@github.com:Pinperepette/IPTV.git`
+* `cd` into `iptv`
+* run `pip install -r requirements.txt` in order to get the full dependencies
+* run `python iptv_gui.py`
+* you can see an example of the GUI in the image below
+
+![alt tag](screenshot/demo.jpg)
+
+## Compatibility
+
+This program work on Window, Linux, Mac OSX and BSD. The only requirement is
+python, better if python 3!
