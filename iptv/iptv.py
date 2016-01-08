@@ -14,7 +14,7 @@ def menu():
     print ""
     print colored.yellow("################")
     print colored.yellow("##### IPTV #####")
-    print colored.yellow("##### v1.1 #####")
+    print colored.yellow("##### v1.2 #####")
     print colored.yellow("################")
     print ""
     print colored.blue("Menu")
@@ -35,7 +35,6 @@ while True:
     elif choosenMenu == 1:
         print colored.green("Fetching URLs plase wait...")
         cr.search_links()
-        cr.add_links()
         print colored.green("Done, 30 URLs founded")
     elif choosenMenu == 2:
         print colored.green("Printing server list")
@@ -43,8 +42,10 @@ while True:
             print "[" + str(index) + "] - " + server
     elif choosenMenu == 3:
         language = str(raw_input("What language do you need? (it, en, es): "))
-        cr.change_language(language)
-        print colored.green("Language changed")
+        if cr.change_language(language):
+            print colored.green("Language changed")
+        else:
+            print colored.red("Language not changes, the file language for " + language + " does not exists")
     elif choosenMenu == 4:
         result =  cr.search_accounts()
         print colored.green(result)
@@ -55,6 +56,6 @@ while True:
             result = cr.search_accounts(url)
             print colored.green(result)
         except IndexError as e:
-            print colored.red("No URL founded at index: " + str(index)) 
+            print colored.red("No URL founded at index: " + str(index))
     else:
         print colored.red("Option not recognized")

